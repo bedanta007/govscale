@@ -1,0 +1,255 @@
+import React, { useState } from 'react';
+import { X, Printer, Download, Flame, ShieldAlert, FileText, CheckCircle2, Copy, Check } from 'lucide-react';
+import jsPDF from 'jspdf';
+
+export default function DirectiveModal({ incident, onClose }) {
+  const [copied, setCopied] = useState(false);
+  if (!incident) return null;
+
+  const sifRiskScore = incident.sifProbability || incident.confidenceScore || 85;
+  const severity = incident.severityLevel || (sifRiskScore >= 50 ? 'CRITICAL SIF PRECURSOR' : 'STANDARD OBSERVATION');
+  const facility = incident.facility || 'Duliajan Drilling Rig #4';
+  const reportType = incident.reportType || 'Unsafe Act';
+  const rootCause = incident.mappedRules?.length > 0 ? incident.mappedRules[0].rule : (incident.rootCause || 'Working at Height');
+  const description = incident.description || incident.rawText || 'Description unavailable';
+  
+  const energies = incident.detectedEnergies || [
+    { id: 'grav', label: 'Gravity / Fall from Height' },
+    { id: 'press', label: 'Pressure & Energy Release' }
+  ];
+
+  const missingControls = incident.missingControls || incident.extractedPrecursors?.barrierFailures?.filter(b => b !== 'N/A') || ['Permit Verification Failure'];
+
+  const mitigations = incident.mitigations || [
+    'Issue immediate Work-Stop Order for non-compliant activity until risk assessment is verified by HSE Lead.',
+    `Enforce mandatory ${rootCause} protocols and inspect barrier controls (${missingControls.join(', ')}).`,
+    'Conduct mandatory Tool Box Talk (TBT) with shift crew at facility before resuming operations.',
+    'Log incident in OIL HSSE Central Portal with formal corrective actions and follow-up audit deadline.'
+  ];
+
+  const copyDirectiveText = () => {
+    const text = `
+=== OIL INDIA LIMITED - HSE SAFETY DIRECTIVE ===
+Ref: ${incident.id || 'OIL-DIRECTIVE-2026'} | Date: ${incident.date || new Date().toISOString().split('T')[0]}
+Status: ${severity} (${sifRiskScore}% SIF Risk Score)
+Facility: ${facility}
+Category: ${reportType}
+Primary LSR: ${rootCause}
+
+DESCRIPTION:
+"${description}"
+
+CRITICAL CONTROLS MISSING:
+${missingControls.map(c => `- ${c}`).join('\n')}
+
+MANDATORY MITIGATION DIRECTIVES:
+${mitigations.map((m, i) => `${i + 1}. ${m}`).join('\n')}
+
+Authorized by Oil India Limited HSE Directorate
+    `.trim();
+
+    navigator.clipboard.writeText(text);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2500);
+  };
+
+  const downloadPDF = () => {
+    const doc = new jsPDF();
+
+    // PDF Title Header
+    doc.setFillColor(15, 23, 42); // slate dark background
+    doc.rect(0, 0, 210, 40, 'F');
+
+    doc.setTextColor(245, 158, 11); // Amber
+    doc.setFontSize(18);
+    doc.setFont('helvetica', 'bold');
+    doc.text('OIL INDIA LIMITED - HSE DIRECTIVE', 15, 18);
+
+    doc.setTextColor(255, 255, 255);
+    doc.setFontSize(10);
+    doc.setFont('helvetica', 'normal');
+    doc.text('SIF PRECURSOR EMERGENCY WORK-STOP DIRECTIVE', 15, 28);
+    doc.text(`Ref: ${incident.id || 'OIL-DIRECTIVE-2026'} | Issued: ${incident.date || new Date().toISOString().split('T')[0]}`, 15, 34);
+
+    // Alert Status
+    doc.setFillColor(239, 68, 68);
+    doc.rect(15, 48, 180, 12, 'F');
+    doc.setTextColor(255, 255, 255);
+    doc.setFontSize(11);
+    doc.setFont('helvetica', 'bold');
+    doc.text(`ALERT: ${severity} (${sifRiskScore}% SIF RISK INDEX)`, 20, 56);
+
+    // Section 1: Facility & Location
+    doc.setTextColor(15, 23, 42);
+    doc.setFontSize(12);
+    doc.setFont('helvetica', 'bold');
+    doc.text('1. Operational Facility & Location Details', 15, 72);
+
+    doc.setFontSize(10);
+    doc.setFont('helvetica', 'normal');
+    doc.text(`Facility / Site: ${facility}`, 15, 80);
+    doc.text(`Report Type: ${reportType}`, 15, 86);
+    doc.text(`Primary Hazard / LSR: ${rootCause}`, 15, 92);
+
+    // Section 2: Description
+    doc.setFontSize(12);
+    doc.setFont('helvetica', 'bold');
+    doc.text('2. Safety Incident Description (NLP Processed)', 15, 106);
+
+    doc.setFontSize(10);
+    doc.setFont('helvetica', 'normal');
+    const splitDesc = doc.splitTextToSize(description, 180);
+    doc.text(splitDesc, 15, 114);
+
+    let yPos = 114 + (splitDesc.length * 6) + 10;
+
+    // Section 3: Mitigations
+    doc.setFontSize(12);
+    doc.setFont('helvetica', 'bold');
+    doc.text('3. Mandatory HSE Corrective Actions & IOGP Directives', 15, yPos);
+    yPos += 8;
+
+    doc.setFontSize(10);
+    doc.setFont('helvetica', 'normal');
+
+    mitigations.forEach((m, idx) => {
+      const splitMitigation = doc.splitTextToSize(`${idx + 1}. ${m}`, 175);
+      doc.text(splitMitigation, 18, yPos);
+      yPos += splitMitigation.length * 6 + 2;
+    });
+
+    yPos += 15;
+    doc.setDrawColor(203, 213, 225);
+    doc.line(15, yPos, 195, yPos);
+    yPos += 10;
+
+    doc.setFontSize(9);
+    doc.setTextColor(100, 116, 139);
+    doc.text('Authorized by Oil India Limited HSE Directorate • Generated by AI/NLP SIF Engine (SIH26165)', 15, yPos);
+
+    doc.save(`OIL_SIF_Directive_${incident.id || 'Report'}.pdf`);
+  };
+
+  return (
+    <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
+      <div className="glass-panel w-full max-w-3xl border-red-500/40 glow-sif overflow-hidden my-8">
+        {/* Modal Header */}
+        <div className="bg-slate-950 px-6 py-4 border-b border-slate-800 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="p-2 rounded-lg bg-red-500/20 text-red-400">
+              <ShieldAlert className="w-5 h-5 animate-pulse" />
+            </div>
+            <div>
+              <h3 className="font-extrabold text-white text-base">OIL SIF PRECURSOR SAFETY DIRECTIVE</h3>
+              <span className="text-xs text-slate-400 font-mono">Incident Ref: {incident.id || 'OIL-2026-LIVE'}</span>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <button onClick={copyDirectiveText} className="btn-secondary text-xs py-1.5 px-3">
+              {copied ? <Check className="w-3.5 h-3.5 text-emerald-400"/> : <Copy className="w-3.5 h-3.5 text-cyan-400"/>}
+              {copied ? 'Copied!' : 'Copy Text'}
+            </button>
+            <button onClick={downloadPDF} className="btn-primary text-xs py-1.5 px-3">
+              <Download className="w-3.5 h-3.5" /> Download PDF Directive
+            </button>
+            <button onClick={onClose} className="p-1.5 text-slate-400 hover:text-white rounded-lg hover:bg-slate-800">
+              <X className="w-5 h-5" />
+            </button>
+          </div>
+        </div>
+
+        {/* Modal Body - Printable Layout */}
+        <div className="p-6 space-y-6 max-h-[75vh] overflow-y-auto font-sans text-slate-200">
+          {/* Header Banner */}
+          <div className="bg-gradient-to-r from-red-950/60 via-slate-950 to-red-950/60 p-4 rounded-xl border border-red-500/30 flex items-center justify-between">
+            <div>
+              <span className="text-[10px] uppercase font-bold text-red-400 tracking-wider">OFFICIAL DIRECTIVE STATUS</span>
+              <div className="text-lg font-extrabold text-white flex items-center gap-2 mt-0.5">
+                <span>{severity}</span>
+              </div>
+            </div>
+            <div className="text-right">
+              <div className="text-2xl font-extrabold font-mono text-red-400">{sifRiskScore}%</div>
+              <div className="text-[10px] text-slate-400">SIF RISK INDEX</div>
+            </div>
+          </div>
+
+          {/* Details Table */}
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 text-xs bg-slate-950/90 p-4 rounded-xl border border-slate-800">
+            <div>
+              <span className="text-[10px] text-slate-400 block font-semibold uppercase">Operational Site</span>
+              <span className="font-bold text-white">{facility}</span>
+            </div>
+            <div>
+              <span className="text-[10px] text-slate-400 block font-semibold uppercase">Report Category</span>
+              <span className="font-bold text-amber-400">{reportType}</span>
+            </div>
+            <div>
+              <span className="text-[10px] text-slate-400 block font-semibold uppercase">Life-Saving Rule</span>
+              <span className="font-bold text-cyan-400">{rootCause}</span>
+            </div>
+          </div>
+
+          {/* Incident Description */}
+          <div>
+            <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Original Incident Text (NLP Processed)</h4>
+            <div className="bg-slate-950 p-4 rounded-xl border border-slate-800 text-xs font-mono leading-relaxed text-slate-300">
+              "{description}"
+            </div>
+          </div>
+
+          {/* High Energy & Missing Safeguards */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="bg-slate-950/90 p-4 rounded-xl border border-slate-800">
+              <h5 className="text-xs font-bold text-amber-400 flex items-center gap-1.5 mb-2">
+                <Flame className="w-4 h-4" /> High Energy Exposures
+              </h5>
+              <div className="flex flex-wrap gap-1.5">
+                {energies.map(e => (
+                  <span key={e.id} className="badge badge-amber text-[10px]">
+                    ⚡ {e.label}
+                  </span>
+                ))}
+              </div>
+            </div>
+
+            <div className="bg-slate-950/90 p-4 rounded-xl border border-slate-800">
+              <h5 className="text-xs font-bold text-red-400 flex items-center gap-1.5 mb-2">
+                <ShieldAlert className="w-4 h-4" /> Control Omissions / Barrier Failures
+              </h5>
+              <div className="flex flex-wrap gap-1.5">
+                {missingControls.map((c, i) => (
+                  <span key={i} className="badge badge-sif text-[10px]">
+                    🛑 {c}
+                  </span>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Corrective Actions */}
+          <div>
+            <h4 className="text-xs font-bold text-white uppercase tracking-wider mb-2 flex items-center gap-1.5">
+              <CheckCircle2 className="w-4 h-4 text-cyan-400" /> Mandatory Field Corrective Actions
+            </h4>
+            <div className="space-y-2">
+              {mitigations.map((action, i) => (
+                <div key={i} className="bg-slate-950 p-3.5 rounded-xl border border-slate-800 text-xs text-slate-200 flex items-start gap-2.5">
+                  <span className="font-bold text-cyan-400 font-mono">{i + 1}.</span>
+                  <span>{action}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Footer */}
+        <div className="bg-slate-950 px-6 py-3 border-t border-slate-800 flex items-center justify-between text-xs text-slate-400">
+          <span>Oil India Limited HSSE Safety Directorate</span>
+          <button onClick={onClose} className="btn-secondary text-xs">Close Preview</button>
+        </div>
+      </div>
+    </div>
+  );
+}

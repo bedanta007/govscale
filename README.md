@@ -1,47 +1,83 @@
-# AI/NLP Engine to Detect SIF Precursors (SIH26165)
-> **Smart India Hackathon (SIH 2026) Problem Statement SIH26165**  
-> **Sponsoring Organization:** Oil India Limited (OIL)  
+# GovScale — Smart Public Procurement Framework for Startup Innovation (SIH26136)
+
+> **Smart India Hackathon (SIH 2026) · Problem Statement SIH26136**  
 > **Theme:** Smart Automation | **Category:** Software  
-> **Live Web Application:** [https://sih-eta-blond.vercel.app](https://sih-eta-blond.vercel.app)
+> **GitHub Repository:** [github.com/bedanta007/govscale](https://github.com/bedanta007/govscale)
 
 ---
 
 ## 📌 Executive Summary
 
-**Oil India Limited (OIL)** generates vast quantities of Health, Safety, Security, and Environment (HSSE) documentation—specifically **Unsafe-Act (UA)**, **Unsafe-Condition (UC)**, and **Near-Miss (NM)** field reports across drilling rigs, pipeline networks, and refineries.
+India's government procurement system lacks a transparent, technology-driven mechanism to discover and onboard vetted startup innovations at scale. Traditional RFP processes are slow, opaque, and inaccessible to early-stage DPIIT-registered startups.
 
-Traditional safety management relies on lagging indicators (analyzing incidents after harm occurs). **SIH26165** transitions safety operations from reactive to proactive by deploying an **AI and Natural Language Processing (NLP) Engine** to detect **Serious Injury & Fatality (SIF) Precursors**—events with high potential energy or missing critical safeguards—before catastrophic accidents happen.
+**GovScale** solves this by building an **end-to-end Smart Public Procurement Framework** — from challenge discovery and AI-powered startup matchmaking to blockchain-audited evaluations, live pilot telemetry, and legally defensible Government Procurement Dossiers — all within a single platform aligned with **GFR Rule 149 (startup procurement exemption)**.
 
 ---
 
 ## ⚡ Key Features
 
-- **Embedded Hybrid AI/NLP Engine**:
-  - **IOGP Energy Wheel Rule Engine**: Classifies hazards into 6 High-Energy categories (Gravity/Height, Stored Pressure, Toxic Gas/Chemical, Mechanical/Crane Hoisting, Electrical/LOTO, Thermal/Hot Work).
-  - **Multilingual NLP Tokenizer**: Supports free-text safety reports in English, Hindi (Devanagari & Hinglish), and Assamese (Bengali script & Romanized keywords).
-  - **SIF Risk Probability Meter (0-100%)**: Quantitative scoring algorithm evaluating energy exposure & safeguard omissions.
-  - **Historical Incident Vector Matching**: Matches current reports against historical OIL safety archives (`HIST-2024-882`, `HIST-2023-419`, `HIST-2025-104`) to surface past lessons learned.
-  - **Root Cause Taxonomy Codes**: Assigns official IOGP/OSHA codes (`RC-HEIGHT-01`, `RC-PRESS-02`, `RC-GAS-03`, `RC-LIFT-04`).
+### 🤖 AI Matchmaker Engine
+- Semantic vector scan of DPIIT-registered startup profiles against government RFP specifications
+- Multi-dimensional scoring across 6 criteria: Innovation Depth, Technical Feasibility, Scalability, Compliance, Cost Efficiency, and Social Impact
+- Recharts radar visualization with instant shortlisting at the click of a button
 
-- **Five Operational Dashboards & Modules**:
-  1. **Executive Dashboard**: KPI metrics, high-energy exposure bar charts, SIF risk donut matrix, active priority SIF alert feed.
-  2. **Live Incident AI Analyzer**: Real-time free-text analyzer, real-world OIL presets (Duliajan Rig #4, Digboi Refinery, Moran Gas Field), Web Speech API voice dictation, and step-by-step AI safety mitigations.
-  3. **Batch Dataset Ingestion**: Bulk triage table with CSV upload support, facility filters, search, and CSV export.
-  4. **Regional Risk Heatmaps**: Geospatial risk status across OIL hubs (Duliajan, Digboi, Moran, Nahorkatia, Guwahati, Jorhat) and root cause radar charts.
-  5. **IOGP Standards & Energy Wheel Guide**: Interactive visual workflow diagram & operational guide for field safety engineers.
+### 📋 Challenge Management
+- Government officers post procurement challenges with SLA, budget, and evaluation criteria
+- Full challenge lifecycle: Draft → Matching → Evaluation → Pilot → Procurement
+- Create Challenge modal with validated form input and live KPI updates
 
-- **Emergency Directive & PDF Generator**:
-  - Generates official Oil India Limited Emergency Safety Alerts with client-side downloadable PDF export (`jspdf`).
+### 🔬 Structured Evaluations
+- 6-criteria interactive sliders (0–100) for granular startup assessment
+- Live composite score recalculation in real-time
+- Blockchain signing of evaluation records via SHA-256 Merkle chain
+- 90-day pilot approval with one-click confirmation
+
+### 📡 Pilot Telemetry Dashboard
+- Live telemetry simulation for active pilots (e.g., patient throughput, district coverage)
+- Recharts Area chart live data stream
+- Simulate Live Telemetry Tick button (+24 unit increments)
+- CSV export of pilot KPI data
+
+### 📜 Procurement Dossier Generator
+- Multi-page official Government PDF via `jspdf`
+- Compliant with GFR Rule 149 (startup procurement exemption)
+- Departmental Procurement Committee (DPC) Evidence Dossier format
+- Auto-populated with evaluation scores, pilot data, and blockchain proof hashes
+
+### 🗺️ Scale Readiness Grid
+- 36-district deployment readiness dashboard
+- Status filter: Active / Pilot / Pending / Approved
+- Visual grid with district-wise rollout status
+
+### 🔗 Blockchain Audit Trail
+- Immutable cryptographic ledger of every platform action
+- SHA-256 Merkle hash chain — every block references the previous
+- Hash Inspector Modal with 1-click copy of verification proofs
+- Searchable audit log with timestamp and role attribution
+
+### 👥 Multi-Role Access Control
+| Role | Access |
+|------|--------|
+| Gov Officer | Post challenges, approve pilots, generate procurement docs |
+| Evaluator | Score startups, sign evaluation blocks |
+| Startup | View matched challenges, track evaluation status |
+| State Admin | Monitor scale readiness across all 36 districts |
+| Public Citizen | Open-access view of challenges and outcomes |
 
 ---
 
 ## 🛠 Tech Stack
 
-- **Frontend**: React 18, Vite 8, Tailwind CSS
-- **Visualization**: Recharts, Lucide React Icons
-- **PDF Generation**: jsPDF
-- **NLP & Classification**: Custom JavaScript Vectorizer, N-gram Tokenizer, Energy Wheel Rules Engine
-- **Deployment**: Vercel (`https://sih-eta-blond.vercel.app`)
+| Layer | Technology |
+|-------|-----------|
+| **Frontend** | React 19, Vite 5 |
+| **Styling** | Tailwind CSS (CDN), Vanilla CSS |
+| **Typography** | Outfit, Plus Jakarta Sans, JetBrains Mono (Google Fonts) |
+| **Visualization** | Recharts (Bar, Radar, Area charts) |
+| **PDF Generation** | jsPDF |
+| **Icons** | Lucide React |
+| **Blockchain Simulation** | Custom SHA-256 Merkle chain (client-side) |
+| **Deployment** | Vercel / Local Vite dev server |
 
 ---
 
@@ -49,15 +85,15 @@ Traditional safety management relies on lagging indicators (analyzing incidents 
 
 ```bash
 # 1. Clone the repository
-git clone https://github.com/ranjanashish2706/SIF-Precursor-AI-NLP-Intelligence-Engine.git
+git clone https://github.com/bedanta007/govscale.git
 
-# 2. Navigate to project directory
-cd SIF-Precursor-AI-NLP-Intelligence-Engine
+# 2. Navigate into the project
+cd govscale
 
 # 3. Install dependencies
 npm install
 
-# 4. Start local dev server (Runs on http://127.0.0.1:3000)
+# 4. Start local dev server (http://localhost:5173)
 npm run dev
 
 # 5. Build for production
@@ -66,5 +102,50 @@ npm run build
 
 ---
 
+## 📁 Project Structure
+
+```
+govscale/
+├── index.html                    # App entry point + Tailwind CDN config
+├── vite.config.js                # Vite build configuration
+├── package.json
+├── public/
+│   └── favicon.svg
+└── src/
+    ├── App.jsx                   # Main application (all views, modals, state)
+    ├── index.css                 # Global styles & design tokens
+    ├── components/
+    │   ├── ChallengeDetailModal.jsx   # SLA, criteria, budget detail view
+    │   ├── CreateChallengeModal.jsx   # New challenge form
+    │   ├── DemoTourModal.jsx          # 5-stage interactive guided tour
+    │   ├── HashInspectorModal.jsx     # Merkle block explorer
+    │   ├── ExecutiveDashboard.jsx     # KPI metrics & charts
+    │   ├── Header.jsx                 # Navigation header
+    │   └── ...                        # Additional components
+    └── services/
+        ├── govScaleData.js            # Demo data (challenges, startups, pilots, audit)
+        ├── pdfService.js              # DPC Procurement Dossier PDF generator
+        └── mockData.js                # Supporting mock data
+```
+
+---
+
+## 🖥️ Application Modules
+
+| Module | Description |
+|--------|-------------|
+| **Overview Dashboard** | KPI cards, pipeline bar chart, radar scoring chart |
+| **Challenges** | Browse, filter, and create procurement challenges |
+| **AI Matchmaker** | Vector scan + radar chart + shortlist startups |
+| **Evaluations** | Criteria sliders, composite scoring, blockchain signing |
+| **Pilots & Telemetry** | Live KPI stream, telemetry tick, CSV export |
+| **Procurement Dossier** | GFR Rule 149 compliant PDF generation |
+| **Scale Readiness** | 36-district deployment grid |
+| **Audit Trail** | Searchable blockchain ledger with hash verification |
+
+---
+
 ## 📄 License
-Developed for Smart India Hackathon (SIH 2026) for Oil India Limited (OIL).
+
+Developed for **Smart India Hackathon 2026** — Problem Statement **SIH26136**  
+*Smart Public Procurement Framework for Startup Innovation*

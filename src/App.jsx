@@ -205,7 +205,7 @@ export default function App() {
                   </span>
                 </div>
                 <span className="text-xs text-slate-300 font-bold block">
-                  State Innovation Procurement System
+                  Smart Public Procurement for Startup Innovation
                 </span>
               </div>
             </div>
@@ -413,11 +413,10 @@ export default function App() {
           <div className="space-y-1.5 text-center md:text-left">
             <div className="flex items-center justify-center md:justify-start space-x-3">
               <span className="font-black text-white text-base font-display">GovScale</span>
-              <span className="badge-gov badge-blue text-[10px]">SIH 2026</span>
-              <span className="text-slate-400 font-mono text-xs font-bold">Problem SIH26136</span>
+              <span className="badge-gov badge-blue text-[10px]">SIH26136</span>
             </div>
             <p className="text-slate-400 text-xs font-medium">
-              Maharashtra State Innovation Society (MSInS) • End-to-End Innovation Procurement & Pilot Evidence Engine
+              Smart Public Procurement Framework for Startup Innovation • SIH 2026
             </p>
           </div>
 
